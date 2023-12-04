@@ -60,7 +60,7 @@ def main():
 
     filename = c + v + ("_kata" if k else "_hira") + ".png"
 
-    save_kana(c if c != "_" else " ", v, k, filename)
+    save_kana(c, v, k, filename)
     print(f"saved to {filename}!")
 
 if __name__ == "__main__":
