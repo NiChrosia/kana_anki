@@ -11,7 +11,7 @@ def make_kana_deck(katakana: bool, filename: str):
 
     def process_cv(consonant: str, vowel: str):
         # save file
-        kana_filename = consonant + vowel + ".png"
+        kana_filename = consonant + vowel + ("_kata" if katakana else "_hira") + ".png"
 
         save_kana(consonant, vowel, katakana, kana_filename)
         files.append(kana_filename)
