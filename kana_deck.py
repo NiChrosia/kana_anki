@@ -6,22 +6,34 @@ from os import remove
 from save_kana import save_kana
 
 def make_kana_deck(katakana: bool, filename: str):
-    deck = Deck(randrange(1 << 30, 1 << 31), ("Kata" if katakana else "Hira") + "kana")
+    deck = Deck(randrange(1 << 30, 1 << 31), "Katakana" if katakana else "Hiragana")
     files = []
 
-    for consonant in list(" kstnhmyrw"):
+    def process_cv(consonant: str, vowel: str):
+        # save file
+        kana_filename = consonant + vowel + ".png"
+
+        save_kana(consonant, vowel, katakana, kana_filename)
+        files.append(kana_filename)
+
+        # add note
+        script = "katakana" if katakana else "hiragana"
+        romaji_c = consonant if consonant != "_" else ""
+        romaji_v = vowel if vowel != "_" else ""
+
+        romaji = f"{script} {romaji_c}{romaji_v}"
+
+        note = Note(model=BASIC_AND_REVERSED_CARD_MODEL, fields=[romaji, f"<img src={kana_filename}>"])
+        deck.add_note(note)
+
+    for consonant in list("_ksthmyrw"):
         for vowel in list("aiueo"):
             if consonant + vowel in ["yi", "ye", "wu"]:
                 continue
-            
-            filename_c = consonant if consonant != " " else "_"
-            kana_filename = filename + filename_c + vowel + ".png"
 
-            save_kana(consonant, vowel, katakana, kana_filename)
-            files.append(kana_filename)
+            process_cv(consonant, vowel)
 
-            note = Note(model=BASIC_AND_REVERSED_CARD_MODEL, fields=[consonant + vowel, f"<img src={kana_filename}>"])
-            deck.add_note(note)
+    process_cv("n", "_")
 
     package = Package(deck)
     package.media_files = files

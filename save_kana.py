@@ -13,11 +13,14 @@ HORIZ_OFFSET = 340
 VERT_OFFSET = 234
 
 VOWELS = list("aiueo")
-CONSONANTS = list(" kstnhmyrwn")
+CONSONANTS = list("_kstnhmyrwn")
 
 all_kana: Image.Image | None = None
 
 def find_kana(c: str, v: str, katakana: bool) -> tuple[int, int]:
+    if v == "_":
+        v = "a"
+
     c_index = CONSONANTS.index(c)
     v_index = VOWELS.index(v)
 
@@ -30,8 +33,8 @@ def find_kana(c: str, v: str, katakana: bool) -> tuple[int, int]:
     return (x, y)
 
 def save_kana(c: str, v: str, katakana: bool, filename: str):
-    """value in the format cvk, where v is a japanese vowel, c is a 
-    japanese consonant, and k is h or k, meaning hira- or kata-kana"""
+    """c is any valid lowercase Japanese consonant or _ if no
+    consonant, and v is any one of aiueo, or _ if no vowel"""
 
     global all_kana
 
@@ -46,7 +49,7 @@ def save_kana(c: str, v: str, katakana: bool, filename: str):
 def main():
     parser = ArgumentParser(prog="save_kana", description="saves the stroke order for a specified kana")
     parser.add_argument("consonant", help="the lowercase character of the consonant, or _ for no consonant")
-    parser.add_argument("vowel", help="the vowel of the kana (aiueo)")
+    parser.add_argument("vowel", help="the vowel of the kana (aiueo), or _ for no vowel")
     parser.add_argument("-k", "--katakana", action="store_true", help="whether to use katakana, or hiragana if absent")
 
     args = parser.parse_args()
@@ -55,14 +58,9 @@ def main():
     v = args.vowel
     k = args.katakana
 
-    find_kana_c = c if c != "_" else " "
+    filename = c + v + ("_kata" if k else "_hira") + ".png"
 
-    filename_c = c if c != "_" else ""
-    filename_k = "_kata" if k else "_hira"
-
-    filename = filename_c + v + filename_k + ".png"
-
-    save_kana(find_kana_c, v, k, filename)
+    save_kana(c if c != "_" else " ", v, k, filename)
     print(f"saved to {filename}!")
 
 if __name__ == "__main__":
