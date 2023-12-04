@@ -44,7 +44,7 @@ def save_kana(c: str, v: str, katakana: bool, filename: str):
     kana.save(filename)
 
 def main():
-    parser = ArgumentParser(prog="kana saver", description="saves the stroke order for a specified kana")
+    parser = ArgumentParser(prog="save_kana", description="saves the stroke order for a specified kana")
     parser.add_argument("consonant", help="the lowercase character of the consonant, or _ for no consonant")
     parser.add_argument("vowel", help="the vowel of the kana (aiueo)")
     parser.add_argument("-k", "--katakana", action="store_true", help="whether to use katakana, or hiragana if absent")

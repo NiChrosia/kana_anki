@@ -32,7 +32,7 @@ def make_kana_deck(katakana: bool, filename: str):
         remove(file)
 
 def main():
-    parser = ArgumentParser(prog="kana deck creator", description="creates an anki deck of either hiragana or katakana")
+    parser = ArgumentParser(prog="kana_deck", description="creates an anki deck of either hiragana or katakana")
     parser.add_argument("filename", help="the path to store the deck at")
     parser.add_argument("-k", "--katakana", action="store_true", help="makes the deck only include katakana, or hiragana if absent")
 
