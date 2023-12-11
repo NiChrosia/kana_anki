@@ -17,23 +17,24 @@ def make_kana_deck(katakana: bool, filename: str):
     files = []
 
     def process_cv(consonant: str, vowel: str):
+        display_c = consonant.lower() if consonant != "_" else ""
+        display_v = vowel.lower() if vowel != "_" else ""
+
         # save file
-        kana_filename = consonant + vowel + ("_kata" if katakana else "_hira") + ".png"
+        kana_filename = display_c + display_v + ("_kata" if katakana else "_hira") + ".png"
 
         save_kana(consonant, vowel, katakana, kana_filename)
         files.append(kana_filename)
 
         # add note
         script = "katakana" if katakana else "hiragana"
-        romaji_c = consonant if consonant != "_" else ""
-        romaji_v = vowel if vowel != "_" else ""
 
-        romaji = romaji_c + romaji_v
+        romaji = display_c + display_v
         romaji = replacements.get(romaji, romaji)
 
-        romaji = f"{script} {romaji}"
+        name = f"{script} {romaji}"
 
-        note = Note(model=BASIC_AND_REVERSED_CARD_MODEL, fields=[romaji, f"<img src={kana_filename}>"])
+        note = Note(model=BASIC_AND_REVERSED_CARD_MODEL, fields=[name, f"<img src={kana_filename}>"])
         deck.add_note(note)
 
     for consonant in list("_kstnhmyrw"):
