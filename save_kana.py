@@ -13,7 +13,7 @@ HORIZ_OFFSET = 340
 VERT_OFFSET = 234
 
 VOWELS = list("aiueo")
-CONSONANTS = list("_kstnhmyrwn")
+CONSONANTS = list("_kstnhmyrwN")
 
 all_kana: Image.Image | None = None
 
@@ -34,7 +34,10 @@ def find_kana(c: str, v: str, katakana: bool) -> tuple[int, int]:
 
 def save_kana(c: str, v: str, katakana: bool, filename: str):
     """c is any valid lowercase Japanese consonant or _ if no
-    consonant, and v is any one of aiueo, or _ if no vowel"""
+    consonant, and v is any one of aiueo, or _ if no vowel
+
+    additionally, to specify a vowelless syllable, capitalize
+    the consonant (eg, (N, _) for the kana n)"""
 
     global all_kana
 
@@ -48,7 +51,7 @@ def save_kana(c: str, v: str, katakana: bool, filename: str):
 
 def main():
     parser = ArgumentParser(prog="save_kana", description="saves the stroke order for a specified kana")
-    parser.add_argument("consonant", help="the lowercase character of the consonant, or _ for no consonant")
+    parser.add_argument("consonant", help="the lowercase character of the consonant, _ for no consonant, or a capitalized letter for a vowelless kana")
     parser.add_argument("vowel", help="the vowel of the kana (aiueo), or _ for no vowel")
     parser.add_argument("-k", "--katakana", action="store_true", help="whether to use katakana, or hiragana if absent")
 

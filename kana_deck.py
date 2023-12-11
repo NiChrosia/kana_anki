@@ -5,6 +5,13 @@ from os import remove
 
 from save_kana import save_kana
 
+replacements = {
+    "si": "shi",
+    "ti": "chi",
+    "tu": "tsu",
+    "hu": "fu",
+}
+
 def make_kana_deck(katakana: bool, filename: str):
     deck = Deck(randrange(1 << 30, 1 << 31), "Katakana" if katakana else "Hiragana")
     files = []
@@ -21,19 +28,22 @@ def make_kana_deck(katakana: bool, filename: str):
         romaji_c = consonant if consonant != "_" else ""
         romaji_v = vowel if vowel != "_" else ""
 
-        romaji = f"{script} {romaji_c}{romaji_v}"
+        romaji = romaji_c + romaji_v
+        romaji = replacements.get(romaji, romaji)
+
+        romaji = f"{script} {romaji}"
 
         note = Note(model=BASIC_AND_REVERSED_CARD_MODEL, fields=[romaji, f"<img src={kana_filename}>"])
         deck.add_note(note)
 
-    for consonant in list("_ksthmyrw"):
+    for consonant in list("_kstnhmyrw"):
         for vowel in list("aiueo"):
             if consonant + vowel in ["yi", "ye", "wu"]:
                 continue
 
             process_cv(consonant, vowel)
 
-    process_cv("n", "_")
+    process_cv("N", "_")
 
     package = Package(deck)
     package.media_files = files
